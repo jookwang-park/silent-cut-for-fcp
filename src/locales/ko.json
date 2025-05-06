@@ -1,0 +1,73 @@
+{
+  "app": {
+    "title": "Silent Cut for FCP",
+    "description": "비디오에서 소리가 있는 부분만 감지하여 FCPXML로 내보내기"
+  },
+  "fileSelect": {
+    "title": "1. 비디오 파일 선택",
+    "description": "분석할 비디오 파일을 선택하거나 드래그 앤 드롭하세요.",
+    "button": "클릭하여 비디오 파일 선택",
+    "supportedFormats": "mp4, mov, avi, mkv 파일 지원",
+    "resolution": "해상도",
+    "length": "길이",
+    "fps": "FPS",
+    "videoInfo": "비디오 정보 로딩 오류: {{message}}",
+    "fileSelectionError": "파일 선택 오류: {{message}}"
+  },
+  "analysisSettings": {
+    "title": "2. 분석 설정",
+    "description": "소리 감지 방식과 출력 파일 설정을 조정합니다.",
+    "detectionSettings": "소리 감지 설정",
+    "thresholdDb": {
+      "label": "소리 감지 임계값 (dB)",
+      "tooltip": "이 값보다 큰 소리만 감지합니다.\n낮을수록 작은 소리도 감지합니다 (더 민감).\n일반적인 목소리는 -10dB ~ -30dB 범위입니다."
+    },
+    "minDuration": {
+      "label": "최소 소리 길이 (ms)",
+      "tooltip": "이 길이보다 짧은 소리 구간은 무시합니다.\n짧은 노이즈 제거에 도움이 됩니다."
+    },
+    "buffer": {
+      "label": "구간 앞뒤 여유 (초)",
+      "tooltip": "감지된 소리 구간의 시작과 끝에\n추가할 여유 시간입니다.\n소리가 급격히 시작하거나 끝나는 경우\n자연스러운 편집에 도움이 됩니다."
+    },
+    "outputSettings": "출력 설정 (FCPXML)",
+    "fps": {
+      "label": "FPS (프레임 속도)",
+      "tooltip": "'자동' 선택 시 비디오 파일에서 감지된 FPS를 사용합니다.\n특정 FPS로 강제 지정할 수도 있습니다.",
+      "auto": "자동"
+    },
+    "resolution": {
+      "label": "해상도",
+      "tooltip": "'자동' 선택 시 비디오 파일의 해상도를 기준으로\nSD/HD/FHD/4K 중 가장 가까운 표준 해상도를 사용합니다.\n특정 해상도로 강제 지정할 수도 있습니다.",
+      "auto": "자동"
+    },
+    "analyzeButton": "비디오 분석 실행",
+    "analyzingButton": "분석 중..."
+  },
+  "analysisResult": {
+    "title": "3. 분석 결과",
+    "description": "총 {{count}}개 구간 감지됨",
+    "seconds": "초",
+    "generateButton": "FCPXML 생성하기",
+    "generatingButton": "FCPXML 생성 중..."
+  },
+  "alerts": {
+    "error": "오류 발생",
+    "success": "성공",
+    "selectVideo": "비디오 파일을 먼저 선택해주세요.",
+    "analyzeFirst": "비디오를 먼저 분석해주세요.",
+    "analysisComplete": "비디오 분석 완료! 총 {{count}}개의 소리가 있는 구간을 찾았습니다.",
+    "analysisError": "비디오 분석 오류: {{error}}",
+    "fcpxmlGenerated": "FCPXML 파일이 생성되었습니다: {{path}}",
+    "fcpxmlError": "FCPXML 생성 오류: {{error}}"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English"
+  },
+  "footer": {
+    "copyright": "© {{year}} Park's Garage",
+    "github": "GitHub 프로젝트 방문하기",
+    "youtube": "YouTube 채널 방문하기"
+  }
+}

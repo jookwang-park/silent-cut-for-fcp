@@ -1,0 +1,73 @@
+{
+  "app": {
+    "title": "Silent Cut for FCP",
+    "description": "Detect audio segments in video and export as FCPXML"
+  },
+  "fileSelect": {
+    "title": "1. Select Video File",
+    "description": "Select or drag & drop a video file to analyze.",
+    "button": "Click to select video file",
+    "supportedFormats": "Supports mp4, mov, avi, mkv files",
+    "resolution": "Resolution",
+    "length": "Length",
+    "fps": "FPS",
+    "videoInfo": "Video info loading error: {{message}}",
+    "fileSelectionError": "File selection error: {{message}}"
+  },
+  "analysisSettings": {
+    "title": "2. Analysis Settings",
+    "description": "Adjust sound detection method and output file settings.",
+    "detectionSettings": "Sound Detection Settings",
+    "thresholdDb": {
+      "label": "Sound Detection Threshold (dB)",
+      "tooltip": "Only sounds louder than this value will be detected.\nLower values detect quieter sounds (more sensitive).\nNormal speech typically ranges from -10dB to -30dB."
+    },
+    "minDuration": {
+      "label": "Minimum Sound Duration (ms)",
+      "tooltip": "Sound segments shorter than this will be ignored.\nHelps filter out short noises."
+    },
+    "buffer": {
+      "label": "Buffer Time (seconds)",
+      "tooltip": "Extra time to add before and after detected sound segments.\nHelps create smoother edits when sound starts or ends abruptly."
+    },
+    "outputSettings": "Output Settings (FCPXML)",
+    "fps": {
+      "label": "FPS (Frame Rate)",
+      "tooltip": "'Auto' will use the FPS detected from the video file.\nYou can also force a specific FPS.",
+      "auto": "Auto"
+    },
+    "resolution": {
+      "label": "Resolution",
+      "tooltip": "'Auto' will use the closest standard resolution (SD/HD/FHD/4K)\nbased on the video file resolution.\nYou can also force a specific resolution.",
+      "auto": "Auto"
+    },
+    "analyzeButton": "Run Video Analysis",
+    "analyzingButton": "Analyzing..."
+  },
+  "analysisResult": {
+    "title": "3. Analysis Results",
+    "description": "{{count}} segments detected",
+    "seconds": "seconds",
+    "generateButton": "Generate FCPXML",
+    "generatingButton": "Generating FCPXML..."
+  },
+  "alerts": {
+    "error": "Error",
+    "success": "Success",
+    "selectVideo": "Please select a video file first.",
+    "analyzeFirst": "Please analyze the video first.",
+    "analysisComplete": "Video analysis complete! Found {{count}} sound segments.",
+    "analysisError": "Video analysis error: {{error}}",
+    "fcpxmlGenerated": "FCPXML file generated: {{path}}",
+    "fcpxmlError": "FCPXML generation error: {{error}}"
+  },
+  "language": {
+    "ko": "한국어",
+    "en": "English"
+  },
+  "footer": {
+    "copyright": "© {{year}} Park's Garage",
+    "github": "View project on GitHub",
+    "youtube": "Visit YouTube channel"
+  }
+}
