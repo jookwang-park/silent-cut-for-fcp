@@ -13,7 +13,7 @@ Final Cut Pro에서 사용할 수 있는 FCPXML 파일로 변환해주는 데스
 
 제작 과정은 다음 유튜브 영상을 참고해주세요. 이왕이면 구독과 좋아요도 눌러주세요! 
 
-👉🏻 [파이널컷 무음 구간 자동 삭제, 오픈소스로 공개 | Rust 프로그래밍 | 프로그램 제작기](https://youtu.be/P8be0132Yqw)
+[![👉🏻파이널컷 무음 구간 자동 삭제, 오픈소스로 공개 | Rust 프로그래밍 | 프로그램 제작기](http://img.youtube.com/vi/P8be0132Yqw/0.jpg)](https://www.youtube.com/watch?v=P8be0132Yqw&t=0s)
 
 ## 주요 기능
 
@@ -79,6 +79,21 @@ brew install ffmpeg@7
 만약 다음 스크린샷과 같이 실행 시 오류가 발생한다면, `ffmpeg` 설치가 되지 않은 것입니다. 
 [사용 전 필수 프로그램 설치](#사용-전-필수-프로그램-설치-(macOS)) 섹션을 확인하여 ffmpeg 설치해주세요.
 
+
+![Troubleshoot Image 01](images/troubleshoot01.png)
+
+```
+Termination Reason:
+Namespace DYLD, Code 1 Library missing
+Library not loaded: /opt/homebrew/*/libavutil.59.dylib
+Referenced from:
+<C03F2050-46AE-3FCF-81B1-A8FAC54AFE9B> /Users/USER/*/Silent
+Cut for FCP.app/Contents/MacOS/silent-cut-for-fcp
+Reason: tried:
+'/opt/homebrew/*/libavutil.59.dylib' (no such file), '/System/
+Volumes/Preboot/Cryptexes/0S/opt/homebrew/*/libavutil.59.dylib' (no such file),
+'/opt/homebrew/*/libavutil.59 dylib' (no such file)
+```
 
 ## 라이선스
 

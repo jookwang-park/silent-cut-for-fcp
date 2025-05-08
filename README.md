@@ -13,7 +13,7 @@ to edit videos more quickly and efficiently.
 
 Please refer to the following YouTube video for the development process. Please subscribe and like while you're there!
 
-👉🏻 [Automatic Silent Section Removal for Final Cut Pro, Open Source Release | Rust Programming | Development Story](https://youtu.be/P8be0132Yqw)
+[![👉🏻Automatic Silent Section Removal for Final Cut Pro, Open Source Release | Rust Programming | Development Story](http://img.youtube.com/vi/P8be0132Yqw/0.jpg)](https://www.youtube.com/watch?v=P8be0132Yqw&t=0s)
 
 ## Key Features
 
@@ -77,6 +77,21 @@ Then, run Silent Cut for FCP.
 
 If you encounter an error when running the application as shown in the screenshot below, it means `ffmpeg` is not installed.
 Please check the [Install Required Programs Before Use](#install-required-programs-before-use-macos) section to install ffmpeg.
+
+![Troubleshoot Image 01](images/troubleshoot01.png)
+
+```
+Termination Reason:
+Namespace DYLD, Code 1 Library missing
+Library not loaded: /opt/homebrew/*/libavutil.59.dylib
+Referenced from:
+<C03F2050-46AE-3FCF-81B1-A8FAC54AFE9B> /Users/USER/*/Silent
+Cut for FCP.app/Contents/MacOS/silent-cut-for-fcp
+Reason: tried:
+'/opt/homebrew/*/libavutil.59.dylib' (no such file), '/System/
+Volumes/Preboot/Cryptexes/0S/opt/homebrew/*/libavutil.59.dylib' (no such file),
+'/opt/homebrew/*/libavutil.59 dylib' (no such file)
+```
 
 ## License
 
