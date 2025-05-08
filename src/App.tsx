@@ -474,9 +474,9 @@ function App() {
                           {videoInfo ? videoInfo.fps.toFixed(2) : "N/A"})
                         </SelectItem>
                         <SelectItem value="29.97">29.97 fps</SelectItem>
-                        <SelectItem value="30">30 fps</SelectItem>
+                        <SelectItem value="30.00">30 fps</SelectItem>
                         <SelectItem value="59.94">59.94 fps</SelectItem>
-                        <SelectItem value="60">60 fps</SelectItem>
+                        <SelectItem value="60.00">60 fps</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
