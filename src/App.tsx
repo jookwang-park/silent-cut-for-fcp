@@ -73,8 +73,9 @@ function App() {
 
   // 설정 상태
   const [thresholdDb, setThresholdDb] = useState<number>(10);
-  const [minDurationMs, setMinDurationMs] = useState<number>(10);
-  const [bufferSec, setBufferSec] = useState<number>(0.15);
+  const [minDurationMs, setMinDurationMs] = useState<number>(100);
+  const [leftBufferSec, setLeftBufferSec] = useState<number>(0.01);
+  const [rightBufferSec, setRightBufferSec] = useState<number>(0.15);
   const [fps, setFps] = useState<string>("auto");
   const [resolution, setResolution] = useState<string>("auto");
 
@@ -172,7 +173,8 @@ function App() {
         videoPath,
         thresholdDb,
         minDurationMs,
-        bufferSec,
+        leftBufferSec,
+        rightBufferSec,
       );
 
       // 결과 변환 및 저장
@@ -367,7 +369,7 @@ function App() {
                     <Slider
                       id="threshold"
                       min={-60}
-                      max={30}
+                      max={60}
                       step={1}
                       value={[thresholdDb]}
                       onValueChange={(value) => setThresholdDb(value[0])}
@@ -411,10 +413,41 @@ function App() {
                   <div className="space-y-1">
                     <div className="flex justify-between items-center mb-1">
                       <label
-                        htmlFor="buffer"
+                        htmlFor="leftBufferSec"
                         className="text-sm font-medium flex items-center gap-1.5"
                       >
-                        {t("analysisSettings.buffer.label")}
+                        {t("analysisSettings.leftBufferSec.label")}
+                        <Tooltip delayDuration={100}>
+                          <TooltipTrigger asChild>
+                            <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t("analysisSettings.leftBufferSec.tooltip")}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </label>
+                      <span className="text-sm font-semibold tabular-nums">
+                        {leftBufferSec.toFixed(2)} sec
+                      </span>
+                    </div>
+                    <Slider
+                      id="leftBufferSec"
+                      min={0}
+                      max={1.0}
+                      step={0.01}
+                      value={[leftBufferSec]}
+                      onValueChange={(value) => setLeftBufferSec(value[0])}
+                      className="w-full"
+                      disabled={!videoPath || isAnalyzing}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex justify-between items-center mb-1">
+                      <label
+                        htmlFor="rightBufferSec"
+                        className="text-sm font-medium flex items-center gap-1.5"
+                      >
+                        {t("analysisSettings.rightBufferSec.label")}
                         <Tooltip delayDuration={100}>
                           <TooltipTrigger asChild>
                             <Info className="h-4 w-4 text-muted-foreground cursor-help" />
@@ -425,16 +458,16 @@ function App() {
                         </Tooltip>
                       </label>
                       <span className="text-sm font-semibold tabular-nums">
-                        {bufferSec.toFixed(2)} sec
+                        {rightBufferSec.toFixed(2)} sec
                       </span>
                     </div>
                     <Slider
-                      id="buffer"
+                      id="rightBufferSec"
                       min={0}
                       max={1.0}
-                      step={0.05}
-                      value={[bufferSec]}
-                      onValueChange={(value) => setBufferSec(value[0])}
+                      step={0.01}
+                      value={[rightBufferSec]}
+                      onValueChange={(value) => setRightBufferSec(value[0])}
                       className="w-full"
                       disabled={!videoPath || isAnalyzing}
                     />

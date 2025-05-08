@@ -27,7 +27,8 @@ struct ProcessedAudio {
 pub struct AudioAnalyzerOption {
     pub threshold_db: f32,
     pub min_duration_ms: u32,
-    pub buffer_sec: f32,
+    pub left_buffer_sec: f32,
+    pub right_buffer_sec: f32,
 }
 
 impl Default for AudioAnalyzerOption {
@@ -35,7 +36,8 @@ impl Default for AudioAnalyzerOption {
         Self {
             threshold_db: 20.0,
             min_duration_ms: 50,
-            buffer_sec: 0.15,
+            left_buffer_sec: 0.01,
+            right_buffer_sec: 0.15,
         }
     }
 }
@@ -174,7 +176,8 @@ impl AudioAnalyzer {
         }: ProcessedAudio,
         threshold_db: f32,
         min_duration_ms: u32,
-        buffer_sec: f32,
+        left_buffer_sec: f32,
+        right_buffer_sec: f32,
         progress_callback: &mut F,
     ) -> Vec<Segment>
     where
@@ -182,7 +185,8 @@ impl AudioAnalyzer {
     {
         let threshold_amplitude = 10.0_f32.powf(threshold_db / 20.0);
 
-        let buffer_samples = (sample_rate as f32 * buffer_sec) as usize;
+        let left_buffer_samples = (sample_rate as f32 * left_buffer_sec) as usize;
+        let right_buffer_samples = (sample_rate as f32 * right_buffer_sec) as usize;
 
         let window_size = (sample_rate / 100) as usize;
         let min_samples = (sample_rate as u32 * min_duration_ms / 1000) as usize;
@@ -240,13 +244,14 @@ impl AudioAnalyzer {
 
                 if duration_in_samples >= min_samples {
                     let buffered_start_idx = if silent_start_idx > 0 {
-                        let buffer_windows = buffer_samples / window_size;
+                        let buffer_windows = left_buffer_samples / window_size;
                         silent_start_idx.saturating_sub(buffer_windows)
                     } else {
                         0
                     };
 
-                    let buffered_end_idx = (i + buffer_samples / window_size).min(rms_values.len());
+                    let buffered_end_idx =
+                        (i + right_buffer_samples / window_size).min(rms_values.len());
 
                     let start_time = (buffered_start_idx * window_size) as f32 / sample_rate as f32;
                     let end_time = (buffered_end_idx * window_size).min(samples.len()) as f32
@@ -275,7 +280,7 @@ impl AudioAnalyzer {
 
             if duration_in_samples >= min_samples {
                 let buffered_start_idx = if silent_start_idx > 0 {
-                    let buffer_windows = buffer_samples / window_size;
+                    let buffer_windows = left_buffer_samples / window_size;
                     silent_start_idx.saturating_sub(buffer_windows)
                 } else {
                     0
@@ -311,7 +316,7 @@ impl AudioAnalyzer {
         let mut current_segment = segments[0];
 
         for &segment in segments.iter().skip(1) {
-            if segment.start <= current_segment.end + (0.1 * buffer_sec) {
+            if segment.start <= current_segment.end + (0.1 * left_buffer_sec) {
                 current_segment.end = segment.end.max(current_segment.end);
             } else {
                 merged_segments.push(current_segment);
@@ -336,7 +341,8 @@ impl AudioAnalyzer {
         AudioAnalyzerOption {
             threshold_db,
             min_duration_ms,
-            buffer_sec,
+            left_buffer_sec,
+            right_buffer_sec,
         }: AudioAnalyzerOption,
         mut progress_callback: F,
     ) -> Result<Vec<Segment>, AudioAnalyzerError>
@@ -349,7 +355,8 @@ impl AudioAnalyzer {
             processed_audio,
             threshold_db,
             min_duration_ms,
-            buffer_sec,
+            left_buffer_sec,
+            right_buffer_sec,
             &mut progress_callback,
         ))
     }

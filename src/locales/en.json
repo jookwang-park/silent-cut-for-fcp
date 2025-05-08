@@ -26,9 +26,13 @@
       "label": "Minimum Sound Duration (ms)",
       "tooltip": "Sound segments shorter than this will be ignored.\nHelps filter out short noises."
     },
-    "buffer": {
-      "label": "Buffer Time (seconds)",
-      "tooltip": "Extra time to add before and after detected sound segments.\nHelps create smoother edits when sound starts or ends abruptly."
+    "leftBufferSec": {
+      "label": "Left Buffer (seconds)",
+      "tooltip": "Extra time to add before detected sound segments.\nHelps create smoother edits when sound starts abruptly."
+    },
+    "rightBufferSec": {
+      "label": "Right Buffer (seconds)",
+      "tooltip": "Extra time to add after detected sound segments.\nHelps create smoother edits when sound ends abruptly."
     },
     "outputSettings": "Output Settings (FCPXML)",
     "fps": {

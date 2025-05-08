@@ -11,13 +11,15 @@ const useCommand = () => {
     videoPath: string,
     thresholdDb: number,
     minDurationMs: number,
-    bufferSec: number,
+    leftBufferSec: number,
+    rightBufferSec: number,
   ): Promise<AnalysisResult> => {
     const result = await invoke<AnalysisResult>("analyze_video", {
       videoPath,
       thresholdDb,
       minDurationMs,
-      bufferSec,
+      leftBufferSec,
+      rightBufferSec,
     });
     return result;
   };

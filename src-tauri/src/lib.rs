@@ -29,7 +29,8 @@ async fn analyze_video(
     video_path: String,
     threshold_db: f32,
     min_duration_ms: u32,
-    buffer_sec: f32,
+    left_buffer_sec: f32,
+    right_buffer_sec: f32,
     window: tauri::Window,
 ) -> Result<AnalysisResult, String> {
     // 임시 오디오 파일 경로 생성
@@ -82,7 +83,8 @@ async fn analyze_video(
             detector::analyzer::AudioAnalyzerOption {
                 threshold_db,
                 min_duration_ms,
-                buffer_sec,
+                left_buffer_sec,
+                right_buffer_sec,
             },
             progress_callback,
         )
