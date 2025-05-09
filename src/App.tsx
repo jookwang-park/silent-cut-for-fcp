@@ -68,7 +68,7 @@ function App() {
     phase: "",
     percentage: 0,
   });
-  const [useDeepfilternet, setUseDeepfilternet] = useState<boolean>(true);
+  const [useDeepfilternet, setUseDeepfilternet] = useState<boolean>(false);
   const [useNormalize, setUseNormalize] = useState<boolean>(false);
   const [targetDb, setTargetDb] = useState<number>(-3.0);
   const [peakNormalization, setPeakNormalization] = useState<boolean>(false);
