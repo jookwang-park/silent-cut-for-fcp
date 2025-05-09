@@ -20,6 +20,8 @@ Please refer to the following YouTube video for the development process. Please 
 - Automatic audio analysis and sound detection in video files
 - Export detected sections as Final Cut Pro compatible FCPXML files
 - Support for various FPS and resolution settings
+- Automatic voice section detection for videos with background noise using DeepFilterNet machine learning
+- Audio normalization integration
 
 ## Install Required Programs Before Use (macOS)
 
