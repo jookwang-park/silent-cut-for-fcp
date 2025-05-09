@@ -1,5 +1,10 @@
+<p align="center">
+<img src="app-icon.png" width="300" height="300" border="0"/>
+</p>
+
 [![English](https://img.shields.io/badge/English-Click-yellow)](README.md)
 [![한국어](https://img.shields.io/badge/한국어-클릭-yellow)](README-ko.md)
+![GitHub License](https://img.shields.io/github/license/jookwang-park/silent-cut-for-fcp)
 
 Silent Cut for FCP는 비디오 파일에서 소리가 있는 부분만 자동으로 감지하여
 Final Cut Pro에서 사용할 수 있는 FCPXML 파일로 변환해주는 데스크톱 애플리케이션입니다.
