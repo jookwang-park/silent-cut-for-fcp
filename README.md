@@ -100,6 +100,10 @@ Volumes/Preboot/Cryptexes/0S/opt/homebrew/*/libavutil.59.dylib' (no such file),
 '/opt/homebrew/*/libavutil.59 dylib' (no such file)
 ```
 
+## Special Thanks
+- Admin of Final Cut Pro Kakao Open Chat Room (for providing various feedback)
+- Pacutro from Final Cut Pro Kakao Open Chat Room (for providing the app icon)
+
 ## License
 
 [MIT](LICENSE)

@@ -102,6 +102,11 @@ Volumes/Preboot/Cryptexes/0S/opt/homebrew/*/libavutil.59.dylib' (no such file),
 '/opt/homebrew/*/libavutil.59 dylib' (no such file)
 ```
 
+## 감사한 분들
+
+- 파이널컷 프로 오픈톡방 방장님 (다양한 피드백 제공)
+- 파이널컷 프로 오픈톡방 파컷로님 (앱 아이콘 제공)
+
 ## 라이선스
 
 [MIT](LICENSE)
