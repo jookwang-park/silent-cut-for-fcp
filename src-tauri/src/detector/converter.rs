@@ -55,8 +55,8 @@ pub fn convert_video_to_audio(video_path: &str, audio_path: &str) -> Result<(), 
         .output(
             ez_ffmpeg::Output::new(audio_path)
                 .set_audio_codec("pcm_s16le")
-                .set_audio_sample_rate(44100)
-                .set_audio_channels(2),
+                .set_audio_sample_rate(48000)
+                .set_audio_channels(1),
         )
         .build()
         .map_err(|e| ConverterError::ConversionError(e.to_string()))?;
@@ -68,4 +68,19 @@ pub fn convert_video_to_audio(video_path: &str, audio_path: &str) -> Result<(), 
         .map_err(|e| ConverterError::ConversionError(e.to_string()))?;
 
     Ok(())
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_convert_video_to_audio() {
+        let result = convert_video_to_audio(
+            "/Users/jkpark/Parks/99-Record/2025-05-04 17-44-19.mp4",
+            "/Users/jkpark/Parks/01-/silent-cut-for-fcp/test22.wav",
+        );
+
+        assert_eq!(result.is_ok(), true);
+    }
 }

@@ -31,6 +31,9 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
+    "resources": [
+      "models/DeepFilterNet3_onnx.tar.gz"
+    ],
     "macOS": {
       "entitlements": "./Entitlements.plist"
     }

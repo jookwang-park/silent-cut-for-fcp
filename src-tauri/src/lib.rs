@@ -2,9 +2,12 @@ mod detector;
 
 use detector::analyzer::{Progress, Segment};
 use detector::converter::VideoInfo;
+use detector::deepfilter::Parameter;
 use serde::{Deserialize, Serialize};
 use std::path::Path;
-use tauri::Emitter;
+use std::sync::Arc;
+use tauri::path::BaseDirectory;
+use tauri::{Emitter, Manager};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct AnalysisResult {
@@ -27,12 +30,18 @@ async fn get_video_info(video_path: String) -> Result<VideoInfo, String> {
 #[tauri::command]
 async fn analyze_video(
     video_path: String,
+    use_deepfilternet: bool,
+    use_normalize: bool,
+    target_db: f32,
+    peak_normalization: bool,
     threshold_db: f32,
     min_duration_ms: u32,
     left_buffer_sec: f32,
     right_buffer_sec: f32,
     window: tauri::Window,
+    handle: tauri::AppHandle,
 ) -> Result<AnalysisResult, String> {
+    let window = Arc::new(window);
     // 임시 오디오 파일 경로 생성
     let video_path_obj = Path::new(&video_path);
     let filename = video_path_obj
@@ -67,6 +76,56 @@ async fn analyze_video(
             },
         )
         .unwrap();
+
+    if use_deepfilternet {
+        let model_path = handle
+            .path()
+            .resolve("models/DeepFilterNet3_onnx.tar.gz", BaseDirectory::Resource)
+            .unwrap();
+        println!("model_path: {:?}", model_path);
+        let params = Parameter::default();
+        let window = window.clone();
+        let progress_callback = move |progress: f32| {
+            window
+                .emit(
+                    "analyze-progress",
+                    Progress {
+                        phase: "Applying DeepFilterNet".to_string(),
+                        percentage: progress,
+                    },
+                )
+                .unwrap();
+        };
+        detector::deepfilter::apply_deepfilternet(
+            params,
+            &model_path.to_string_lossy(),
+            &audio_path,
+            &audio_path,
+            progress_callback,
+        )
+        .map_err(|e| e.to_string())?;
+    }
+
+    if use_normalize {
+        let window = window.clone();
+        let analyzer = detector::analyzer::AudioAnalyzer::new();
+        let progress_callback = move |progress: Progress| {
+            window.emit("analyze-progress", progress).unwrap();
+        };
+
+        // 오디오 정규화 실행
+        analyzer
+            .normalize(
+                &audio_path,
+                &audio_path,
+                detector::analyzer::AudioNormalizerOption {
+                    target_db,
+                    peak_normalization,
+                },
+                progress_callback,
+            )
+            .map_err(|e| e.to_string())?;
+    }
 
     // 오디오 분석
     let analyzer = detector::analyzer::AudioAnalyzer::new();
@@ -135,6 +194,37 @@ async fn generate_fcpxml(
         .map_err(|e| e.to_string())
 }
 
+#[tauri::command]
+async fn normalize_audio(
+    audio_path: String,
+    output_path: String,
+    target_db: f32,
+    peak_normalization: bool,
+    window: tauri::Window,
+) -> Result<String, String> {
+    let analyzer = detector::analyzer::AudioAnalyzer::new();
+
+    let progress_callback = move |progress: detector::analyzer::Progress| {
+        println!("progress: {:?}", progress);
+        window.emit("analyze-progress", progress).unwrap();
+    };
+
+    // 오디오 정규화 실행
+    analyzer
+        .normalize(
+            &audio_path,
+            &output_path,
+            detector::analyzer::AudioNormalizerOption {
+                target_db,
+                peak_normalization,
+            },
+            progress_callback,
+        )
+        .map_err(|e| e.to_string())?;
+
+    Ok(output_path)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -145,7 +235,8 @@ pub fn run() {
             greet,
             get_video_info,
             analyze_video,
-            generate_fcpxml
+            generate_fcpxml,
+            normalize_audio,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

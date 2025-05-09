@@ -24,9 +24,17 @@ tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 xml-builder = "0.5.4"
-ez-ffmpeg = { version="0.4.1", features= [ "opengl"] }
+ez-ffmpeg = { version = "0.4.1", features = ["opengl"] }
 symphonia = "0.5.4"
 thiserror = "2.0.12"
 tauri-plugin-dialog = "2"
 tauri-plugin-os = "2"
+hound = "3.5.1"
 
+deep_filter = { path = "./mods/DeepFilterNet/libDF", features = [
+    "default-model",
+    "tract",
+    "wav-utils",
+    "transforms",
+] }
+ndarray = { version = "0.15.6" }

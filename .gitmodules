@@ -1,0 +1,3 @@
+[submodule "src-tauri/mods/DeepFilterNet"]
+	path = src-tauri/mods/DeepFilterNet
+	url = git@github.com:jookwang-park/DeepFilterNet.git

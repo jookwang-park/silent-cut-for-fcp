@@ -13,8 +13,6 @@ import {
   Segment,
   VideoInfo,
 } from "./interface";
-
-// Shadcn 컴포넌트 임포트 - 설치 후에 활성화
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -51,6 +49,9 @@ import {
   Info,
   Settings,
   FileCheck,
+  Check,
+  Volume2,
+  Zap,
 } from "lucide-react";
 
 function App() {
@@ -67,6 +68,10 @@ function App() {
     phase: "",
     percentage: 0,
   });
+  const [useDeepfilternet, setUseDeepfilternet] = useState<boolean>(true);
+  const [useNormalize, setUseNormalize] = useState<boolean>(false);
+  const [targetDb, setTargetDb] = useState<number>(-3.0);
+  const [peakNormalization, setPeakNormalization] = useState<boolean>(false);
   const [version, setVersion] = useState<string>("");
 
   const { getVideoInfo, analyzeVideo, generateFcpXml } = useCommand();
@@ -171,10 +176,14 @@ function App() {
     try {
       const result: AnalysisResult = await analyzeVideo(
         videoPath,
+        useDeepfilternet,
         thresholdDb,
         minDurationMs,
         leftBufferSec,
         rightBufferSec,
+        useNormalize,
+        peakNormalization,
+        targetDb
       );
 
       // 결과 변환 및 저장
@@ -552,6 +561,124 @@ function App() {
                       </SelectContent>
                     </Select>
                   </div>
+                </div>
+              </div>
+              <div className="mt-4 p-3">
+                <div className="mt-4 p-3 bg-accent/40 rounded-md border border-border">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-primary" />
+                      <h4 className="text-sm font-semibold">{t("analysisSettings.advancedAudio.title")}</h4>
+                    </div>
+                    <Button
+                      onClick={() => setUseDeepfilternet(!useDeepfilternet)}
+                      className={`h-8 px-3 flex items-center gap-2 ${useDeepfilternet
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground border border-input"
+                        }`}
+                      disabled={!videoPath || isAnalyzing}
+                    >
+                      {useDeepfilternet ? <Check className="h-4 w-4" /> : null}
+                      <span className="text-sm">{t(`analysisSettings.advancedAudio.deepFilterNet.${useDeepfilternet ? "enabled" : "disabled"}`)}</span>
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {t("analysisSettings.advancedAudio.deepFilterNet.description")}
+                  </p>
+                </div>
+
+                <div className="mt-4 p-3 bg-accent/40 rounded-md border border-border">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <Volume2 className="h-5 w-5 text-primary" />
+                      <h4 className="text-sm font-semibold">{t("analysisSettings.advancedAudio.normalization.title")}</h4>
+                    </div>
+                    <Button
+                      onClick={() => setUseNormalize(!useNormalize)}
+                      className={`h-8 px-3 flex items-center gap-2 ${useNormalize
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground border border-input"
+                        }`}
+                      disabled={!videoPath || isAnalyzing}
+                    >
+                      {useNormalize ? <Check className="h-4 w-4" /> : null}
+                      <span className="text-sm">{t(`analysisSettings.advancedAudio.normalization.${useNormalize ? "enabled" : "disabled"}`)}</span>
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mb-3">
+                    {t("analysisSettings.advancedAudio.normalization.description")}
+                  </p>
+
+                  {useNormalize && (
+                    <div className="space-y-3 pl-2 border-l-2 border-primary/20 mt-3">
+                      <div className="space-y-1">
+                        <div className="flex justify-between items-center mb-1">
+                          <label
+                            htmlFor="targetDb"
+                            className="text-sm font-medium flex items-center gap-1.5"
+                          >
+                            {t("analysisSettings.advancedAudio.normalization.targetLevel")}
+                            <Tooltip delayDuration={100}>
+                              <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{t("analysisSettings.advancedAudio.normalization.targetLevelTooltip")}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </label>
+                          <span className="text-sm font-semibold tabular-nums">
+                            {targetDb} dB
+                          </span>
+                        </div>
+                        <Slider
+                          id="targetDb"
+                          min={-24}
+                          max={0}
+                          step={0.5}
+                          value={[targetDb]}
+                          onValueChange={(value) => setTargetDb(value[0])}
+                          className="w-full"
+                          disabled={!videoPath || isAnalyzing || !useNormalize}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between pt-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm">{t("analysisSettings.advancedAudio.normalization.method")}</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            onClick={() => setPeakNormalization(true)}
+                            className={`h-8 px-3 flex items-center gap-1.5 border ${peakNormalization
+                              ? "bg-primary text-primary-foreground border-primary font-medium"
+                              : "bg-background hover:bg-accent border-input"
+                              }`}
+                            disabled={!videoPath || isAnalyzing || !useNormalize}
+                          >
+                            {peakNormalization && <Check className="h-3.5 w-3.5" />}
+                            <span>{t("analysisSettings.advancedAudio.normalization.peakBased")}</span>
+                          </Button>
+                          <Button
+                            onClick={() => setPeakNormalization(false)}
+                            className={`h-8 px-3 flex items-center gap-1.5 border ${!peakNormalization
+                              ? "bg-primary text-primary-foreground border-primary font-medium"
+                              : "bg-background hover:bg-accent border-input"
+                              }`}
+                            disabled={!videoPath || isAnalyzing || !useNormalize}
+                          >
+                            {!peakNormalization && <Check className="h-3.5 w-3.5" />}
+                            <span>{t("analysisSettings.advancedAudio.normalization.rmsBased")}</span>
+                          </Button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {peakNormalization
+                          ? t("analysisSettings.advancedAudio.normalization.peakDescription")
+                          : t("analysisSettings.advancedAudio.normalization.rmsDescription")}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>

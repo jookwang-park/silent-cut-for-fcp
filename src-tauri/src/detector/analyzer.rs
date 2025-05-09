@@ -1,5 +1,6 @@
 use std::{fs::File, path::Path};
 
+use hound;
 use serde::{Deserialize, Serialize};
 use symphonia::core::{
     audio::{AudioBufferRef, Signal},
@@ -17,6 +18,8 @@ pub enum AudioAnalyzerError {
     AnalysisError(String),
     #[error("Failed to decode audio: {0}")]
     DecodeError(String),
+    #[error("Failed to write audio file: {0}")]
+    WriteError(String),
 }
 
 struct ProcessedAudio {
@@ -38,6 +41,20 @@ impl Default for AudioAnalyzerOption {
             min_duration_ms: 50,
             left_buffer_sec: 0.01,
             right_buffer_sec: 0.15,
+        }
+    }
+}
+
+pub struct AudioNormalizerOption {
+    pub target_db: f32,
+    pub peak_normalization: bool,
+}
+
+impl Default for AudioNormalizerOption {
+    fn default() -> Self {
+        Self {
+            target_db: -3.0,
+            peak_normalization: true,
         }
     }
 }
@@ -166,6 +183,112 @@ impl AudioAnalyzer {
             sample_rate,
             samples,
         })
+    }
+
+    // 오디오 정규화 함수
+    pub fn normalize<F>(
+        &self,
+        input_path: &str,
+        output_path: &str,
+        AudioNormalizerOption {
+            target_db,
+            peak_normalization,
+        }: AudioNormalizerOption,
+        mut progress_callback: F,
+    ) -> Result<(), AudioAnalyzerError>
+    where
+        F: FnMut(Progress) -> () + Send + Sync + 'static,
+    {
+        // 오디오 파일 로드
+        progress_callback(Progress {
+            phase: "Normalizing Audio".to_string(),
+            percentage: 0.0,
+        });
+
+        let ProcessedAudio {
+            sample_rate,
+            mut samples,
+        } = self.process_audio_samples(input_path, &mut progress_callback)?;
+
+        // 1. 최대 진폭 또는 RMS 값 계산
+        progress_callback(Progress {
+            phase: "Normalizing Audio".to_string(),
+            percentage: 33.0,
+        });
+
+        let target_amplitude = 10.0_f32.powf(target_db / 20.0);
+        let mut normalization_factor = 1.0;
+
+        if peak_normalization {
+            // 최대 진폭을 기준으로 정규화
+            let max_amplitude = samples.iter().map(|&s| s.abs()).fold(0.0, f32::max);
+
+            if max_amplitude > 0.0 {
+                normalization_factor = target_amplitude / max_amplitude;
+            }
+        } else {
+            // RMS 값을 기준으로 정규화
+            let sum_squares: f32 = samples.iter().map(|&s| s * s).sum();
+            let rms = (sum_squares / samples.len() as f32).sqrt();
+
+            if rms > 0.0 {
+                normalization_factor = target_amplitude / rms;
+            }
+        }
+
+        // 2. 모든 샘플에 정규화 계수 적용
+        progress_callback(Progress {
+            phase: "Normalizing Audio".to_string(),
+            percentage: 66.0,
+        });
+
+        for sample in &mut samples {
+            *sample *= normalization_factor;
+
+            // 클리핑 방지 (최대값을 넘지 않도록)
+            if *sample > 1.0 {
+                *sample = 1.0;
+            } else if *sample < -1.0 {
+                *sample = -1.0;
+            }
+        }
+
+        // 3. 정규화된 오디오 파일 저장
+        progress_callback(Progress {
+            phase: "Normalizing Audio".to_string(),
+            percentage: 90.0,
+        });
+
+        // hound 라이브러리를 사용하여 WAV 파일 저장
+        let spec = hound::WavSpec {
+            channels: 1,
+            sample_rate,
+            bits_per_sample: 16,
+            sample_format: hound::SampleFormat::Int,
+        };
+
+        let mut writer = hound::WavWriter::create(output_path, spec)
+            .map_err(|e| AudioAnalyzerError::WriteError(e.to_string()))?;
+
+        // 샘플 데이터 작성
+        for sample in samples {
+            // f32 샘플을 i16으로 변환 (PCM 16-bit)
+            let pcm_sample = (sample * 32767.0) as i16;
+            writer
+                .write_sample(pcm_sample)
+                .map_err(|e| AudioAnalyzerError::WriteError(e.to_string()))?;
+        }
+
+        writer
+            .finalize()
+            .map_err(|e| AudioAnalyzerError::WriteError(e.to_string()))?;
+
+        progress_callback(Progress {
+            phase: "Normalizing Audio".to_string(),
+            percentage: 100.0,
+        });
+
+        Ok(())
     }
 
     fn find_non_silent_segments<F>(

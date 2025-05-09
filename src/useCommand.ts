@@ -9,17 +9,25 @@ const useCommand = () => {
 
   const analyzeVideo = async (
     videoPath: string,
+    useDeepfilternet: boolean,
     thresholdDb: number,
     minDurationMs: number,
     leftBufferSec: number,
     rightBufferSec: number,
+    useNormalize: boolean = false,
+    peakNormalization: boolean = false,
+    targetDb: number = -3.0,
   ): Promise<AnalysisResult> => {
     const result = await invoke<AnalysisResult>("analyze_video", {
       videoPath,
+      useDeepfilternet,
       thresholdDb,
       minDurationMs,
       leftBufferSec,
       rightBufferSec,
+      useNormalize,
+      peakNormalization,
+      targetDb,
     });
     return result;
   };

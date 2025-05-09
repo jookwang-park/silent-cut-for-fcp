@@ -46,7 +46,29 @@
       "auto": "자동"
     },
     "analyzeButton": "비디오 분석 실행",
-    "analyzingButton": "분석 중..."
+    "analyzingButton": "분석 중...",
+    "advancedAudio": {
+      "title": "고급 오디오 처리",
+      "deepFilterNet": {
+        "title": "딥필터넷",
+        "description": "딥필터넷은 딥러닝 기반 오디오 필터링 알고리즘입니다. 배경소리와 잡음을 제거하여 더 정확한 분석이 가능하지만, 처리 시간이 증가할 수 있습니다.",
+        "enabled": "딥필터넷 사용 중",
+        "disabled": "딥필터넷 사용하기"
+      },
+      "normalization": {
+        "title": "오디오 정규화",
+        "description": "오디오 정규화는 볼륨 레벨을 균일하게 조정하여 소리가 작은 부분을 증폭하고 큰 부분을 조절합니다.",
+        "enabled": "정규화 사용 중",
+        "disabled": "정규화 사용하기",
+        "targetLevel": "목표 음량 레벨 (dB)",
+        "targetLevelTooltip": "정규화 시 목표로 하는 음량 레벨입니다. 일반적으로 -3dB에서 -6dB 사이의 값을 사용합니다.",
+        "method": "정규화 방식:",
+        "peakBased": "피크 기준",
+        "rmsBased": "RMS 기준",
+        "peakDescription": "피크 기준: 가장 큰 볼륨을 기준으로 정규화합니다. 순간적인 큰 소리를 기준으로 합니다.",
+        "rmsDescription": "RMS 기준: 평균 볼륨을 기준으로 정규화합니다. 전체적인 소리의 느낌을 유지합니다."
+      }
+    }
   },
   "analysisResult": {
     "title": "3. 분석 결과",

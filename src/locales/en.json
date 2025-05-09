@@ -46,7 +46,29 @@
       "auto": "Auto"
     },
     "analyzeButton": "Run Video Analysis",
-    "analyzingButton": "Analyzing..."
+    "analyzingButton": "Analyzing...",
+    "advancedAudio": {
+      "title": "Advanced Audio Processing",
+      "deepFilterNet": {
+        "title": "DeepFilterNet",
+        "description": "DeepFilterNet is a deep learning-based audio filtering algorithm. It removes background noise for more accurate analysis but may increase processing time.",
+        "enabled": "DeepFilterNet Enabled",
+        "disabled": "Enable DeepFilterNet"
+      },
+      "normalization": {
+        "title": "Audio Normalization",
+        "description": "Audio normalization adjusts volume levels uniformly, amplifying quieter parts and adjusting louder parts.",
+        "enabled": "Normalization Enabled",
+        "disabled": "Enable Normalization",
+        "targetLevel": "Target Volume Level (dB)",
+        "targetLevelTooltip": "Target volume level for normalization. Typically values between -3dB and -6dB are used.",
+        "method": "Normalization Method:",
+        "peakBased": "Peak-based",
+        "rmsBased": "RMS-based",
+        "peakDescription": "Peak-based: Normalizes based on the highest volume level. Uses momentary loud sounds as reference.",
+        "rmsDescription": "RMS-based: Normalizes based on average volume level. Maintains overall sound feeling."
+      }
+    }
   },
   "analysisResult": {
     "title": "3. Analysis Results",
